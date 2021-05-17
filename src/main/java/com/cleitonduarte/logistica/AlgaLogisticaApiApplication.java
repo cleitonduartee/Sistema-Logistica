@@ -4,10 +4,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class WsAlgaLogisticaApiApplication {
+public class AlgaLogisticaApiApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(WsAlgaLogisticaApiApplication.class, args);
+		SpringApplication.run(AlgaLogisticaApiApplication.class, args);
 	}
 
 }
