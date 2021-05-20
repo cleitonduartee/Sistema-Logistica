@@ -14,8 +14,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+
+import com.cleitonduarte.logistica.domain.exception.NegocioException;
 
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
@@ -41,5 +44,15 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		error.setStatus(status.value());
 		error.setTitulo("Um ou mais campos estão invalidos.");
 		return handleExceptionInternal(ex, error,headers, status, request);
+	}
+	
+	@ExceptionHandler(NegocioException.class)
+	public ResponseEntity<Object> handlerNegocio(NegocioException ex, WebRequest request){
+		HttpStatus status = HttpStatus.BAD_REQUEST;
+		ErroPadrao error = new ErroPadrao();		
+		error.setDataHora(LocalDateTime.now());
+		error.setStatus(status.value());
+		error.setTitulo(ex.getMessage());
+		return handleExceptionInternal(ex, error,new HttpHeaders(), status, request);
 	}
 }

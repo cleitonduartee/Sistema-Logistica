@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cleitonduarte.logistica.domain.model.Cliente;
 import com.cleitonduarte.logistica.domain.repository.ClienteRepository;
+import com.cleitonduarte.logistica.domain.service.CatalogoClienteService;
 
 @RestController
 @RequestMapping(value = "/clientes")
@@ -26,6 +27,9 @@ public class ClienteController {
 	
 	@Autowired
 	private ClienteRepository clienteRepository;
+	
+	@Autowired
+	private CatalogoClienteService catalogoClienteService;
 
 	@GetMapping
 	public List<Cliente> listar(){
@@ -40,16 +44,17 @@ public class ClienteController {
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente adicionar(@Valid @RequestBody Cliente newCliente) {
-		return clienteRepository.save(newCliente);		
+		return catalogoClienteService.salvar(newCliente);		
 	}
 	
-	@PutMapping(value = "{clienteId}")
+	@PutMapping(value = "/{clienteId}")
 	public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,@Valid @RequestBody Cliente cliente){
-		if(clienteRepository.existsById(clienteId)) {
+		if(!clienteRepository.existsById(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
+		System.out.println("passou");
 		cliente.setId(clienteId);
-		cliente = clienteRepository.save(cliente);
+		cliente = catalogoClienteService.salvar(cliente);
 		
 		return ResponseEntity.ok(cliente);
 	}
@@ -60,7 +65,7 @@ public class ClienteController {
 		if(!clienteRepository.existsById(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
-		clienteRepository.deleteById(clienteId);
+		catalogoClienteService.excluir(clienteId);
 		return ResponseEntity.noContent().build();
 	}
 }
