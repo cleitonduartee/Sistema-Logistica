@@ -15,7 +15,7 @@ public class ClienteController {
 
 	@GetMapping
 	public List<Cliente> listar(){
-		Cliente cli1 = new Cliente(1L, "João", "joaodascovis@gmail.com", "67 9999999");
+		Cliente cli1 = new Cliente(1L, "João3", "joaodascovis@gmail.com", "67 9999999");
 		Cliente cli2 = new Cliente(1L, "Maria", "Maria@gmail.com", "67 98888888");
 		return Arrays.asList(cli1,cli2);
 	}
