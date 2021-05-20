@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -21,22 +23,42 @@ import com.cleitonduarte.logistica.domain.repository.ClienteRepository;
 public class ClienteController {
 	
 	@Autowired
-	private ClienteRepository ClienteRepository;
+	private ClienteRepository clienteRepository;
 
 	@GetMapping
 	public List<Cliente> listar(){
-		return ClienteRepository.findAll();
+		return clienteRepository.findAll();
 	}
 	@GetMapping(value = "/{clienteId}")
 	public ResponseEntity<Cliente> obter(@PathVariable Long clienteId){
-		return ClienteRepository.findById(clienteId)
+		return clienteRepository.findById(clienteId)
 				.map(cliente -> ResponseEntity.ok(cliente))
 				.orElse(ResponseEntity.notFound().build());
 	}
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Cliente cadastrar(@RequestBody Cliente newCliente) {
-		return ClienteRepository.save(newCliente);
+		return clienteRepository.save(newCliente);		
+	}
+	
+	@PutMapping(value = "{clienteId}")
+	public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,@RequestBody Cliente cliente){
+		if(clienteRepository.existsById(clienteId)) {
+			return ResponseEntity.notFound().build();
+		}
+		cliente.setId(clienteId);
+		cliente = clienteRepository.save(cliente);
 		
+		return ResponseEntity.ok(cliente);
+	}
+	
+	@DeleteMapping(value = "/{clienteId}")
+	public ResponseEntity<Void> remover (@PathVariable Long clienteId){
+		
+		if(!clienteRepository.existsById(clienteId)) {
+			return ResponseEntity.notFound().build();
+		}
+		clienteRepository.deleteById(clienteId);
+		return ResponseEntity.noContent().build();
 	}
 }
