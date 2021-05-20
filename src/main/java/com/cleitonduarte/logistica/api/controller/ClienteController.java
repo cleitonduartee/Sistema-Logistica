@@ -2,6 +2,8 @@ package com.cleitonduarte.logistica.api.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,12 +39,12 @@ public class ClienteController {
 	}
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Cliente cadastrar(@RequestBody Cliente newCliente) {
+	public Cliente adicionar(@Valid @RequestBody Cliente newCliente) {
 		return clienteRepository.save(newCliente);		
 	}
 	
 	@PutMapping(value = "{clienteId}")
-	public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,@RequestBody Cliente cliente){
+	public ResponseEntity<Cliente> atualizar(@PathVariable Long clienteId,@Valid @RequestBody Cliente cliente){
 		if(clienteRepository.existsById(clienteId)) {
 			return ResponseEntity.notFound().build();
 		}
