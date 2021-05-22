@@ -3,6 +3,7 @@ package com.cleitonduarte.logistica.api.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.cleitonduarte.logistica.api.assembler.EntregaAssembler;
 import com.cleitonduarte.logistica.api.model.EntregaModel;
 import com.cleitonduarte.logistica.domain.model.Entrega;
 import com.cleitonduarte.logistica.domain.repository.EntregaRepository;
@@ -29,6 +31,11 @@ public class EntregaController {
 	@Autowired
 	private EntregaRepository entregaRepository;
 	
+	private EntregaAssembler entregaAssembler;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
 	public Entrega solicitar(@RequestBody Entrega entrega) {
@@ -39,19 +46,15 @@ public class EntregaController {
 	public List<EntregaModel> listar(){
 		List<Entrega>listEntrega = entregaRepository.findAll();
 		return listEntrega
-				.stream().map(entrega -> convertEntregaModel(entrega))
+				.stream().map(entrega -> entregaAssembler.toModel(entrega))
 				.collect(Collectors.toList());
 		
 	}
 	@GetMapping(value = "/{entregaId}")
 	public ResponseEntity<EntregaModel> buscar(@PathVariable Long entregaId){
 		return entregaRepository.findById(entregaId)
-				.map(entrega -> ResponseEntity.ok().body(convertEntregaModel(entrega)))
+				.map(entrega -> ResponseEntity.ok(entregaAssembler.toModel(entrega)))			
 				.orElse(ResponseEntity.notFound().build());
 	}
 	
-	private EntregaModel convertEntregaModel(Entrega entrega) {
-		return new EntregaModel(entrega);
-	}
-
 }
