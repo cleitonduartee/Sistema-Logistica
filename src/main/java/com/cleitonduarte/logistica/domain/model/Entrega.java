@@ -2,7 +2,7 @@ package com.cleitonduarte.logistica.domain.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
@@ -36,7 +36,7 @@ public class Entrega implements Serializable{
 	
 	@Enumerated(EnumType.STRING)
 	private StatusEntrega status;
-	private LocalDateTime dataPedido;
-	private LocalDateTime dataFinalizacao;
+	private OffsetDateTime dataPedido;
+	private OffsetDateTime dataFinalizacao;
 	
 }
