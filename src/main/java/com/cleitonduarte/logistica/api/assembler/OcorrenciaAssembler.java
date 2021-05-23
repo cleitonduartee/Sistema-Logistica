@@ -1,5 +1,8 @@
 package com.cleitonduarte.logistica.api.assembler;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -15,6 +18,11 @@ public class OcorrenciaAssembler {
 	
 	public OcorrenciaModel toModel(Ocorrencia ocorrencia) {
 		return modelMapper.map(ocorrencia, OcorrenciaModel.class);
+	}
+	public List<OcorrenciaModel> toCollectionModel(List<Ocorrencia> listOcorrencia) {
+		return listOcorrencia.stream()
+				.map(ocorrencia -> toModel(ocorrencia))
+				.collect(Collectors.toList());
 	}
 
 }
