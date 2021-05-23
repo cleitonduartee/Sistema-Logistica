@@ -17,6 +17,8 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import com.cleitonduarte.logistica.domain.exception.NegocioException;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -54,6 +56,17 @@ public class Entrega implements Serializable{
 		
 		ocorrencias.add(ocorrencia);
 		return ocorrencia;
+	}
+	
+	public void finalizar() {
+		if(!podeSerFinalizada()) {
+			throw new NegocioException("Entrega não pode ser finalizada");
+		}
+		setStatus(StatusEntrega.FINALIZADA);
+		setDataFinalizacao(OffsetDateTime.now());
+	}
+	public boolean podeSerFinalizada() {
+		return StatusEntrega.PENDENTE.equals(getStatus());
 	}
 	
 }
