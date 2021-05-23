@@ -27,9 +27,10 @@ public class Cliente {
 	@Size(max = 60)
 	private String nome;
 	
+	
 	@NotBlank
-	@Email
 	@Size(max = 255)
+	@Email
 	private String email;
 	
 	@NotBlank

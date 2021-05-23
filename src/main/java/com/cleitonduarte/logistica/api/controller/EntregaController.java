@@ -1,9 +1,9 @@
 package com.cleitonduarte.logistica.api.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cleitonduarte.logistica.api.assembler.EntregaAssembler;
 import com.cleitonduarte.logistica.api.model.EntregaModel;
+import com.cleitonduarte.logistica.api.model.input.EntregaInput;
 import com.cleitonduarte.logistica.domain.model.Entrega;
 import com.cleitonduarte.logistica.domain.repository.EntregaRepository;
 import com.cleitonduarte.logistica.domain.service.SolicitacaoEntregaService;
@@ -26,30 +27,25 @@ import com.cleitonduarte.logistica.domain.service.SolicitacaoEntregaService;
 public class EntregaController {
 	
 	@Autowired
-	private SolicitacaoEntregaService solicitacaoEntregaService;
-	
+	private SolicitacaoEntregaService solicitacaoEntregaService;	
 	@Autowired
 	private EntregaRepository entregaRepository;
-	
-	private EntregaAssembler entregaAssembler;
-	
 	@Autowired
-	private ModelMapper modelMapper;
-	
+	private EntregaAssembler entregaAssembler;
+			
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public Entrega solicitar(@RequestBody Entrega entrega) {
-		return solicitacaoEntregaService.solicitar(entrega);
+	public EntregaModel solicitar(@Valid @RequestBody EntregaInput entregaInput) {
+		Entrega entregaSolicitada = entregaAssembler.toEntity(entregaInput);
+		entregaSolicitada =solicitacaoEntregaService.solicitar(entregaSolicitada);
+		return entregaAssembler.toModel(entregaSolicitada);
 	}
 	
 	@GetMapping
 	public List<EntregaModel> listar(){
-		List<Entrega>listEntrega = entregaRepository.findAll();
-		return listEntrega
-				.stream().map(entrega -> entregaAssembler.toModel(entrega))
-				.collect(Collectors.toList());
-		
+		return entregaAssembler.toCollectionModel(entregaRepository.findAll());		
 	}
+	
 	@GetMapping(value = "/{entregaId}")
 	public ResponseEntity<EntregaModel> buscar(@PathVariable Long entregaId){
 		return entregaRepository.findById(entregaId)
