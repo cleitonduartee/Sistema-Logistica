@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cleitonduarte.logistica.domain.exception.EntidadeNaoEncontradaException;
-import com.cleitonduarte.logistica.domain.exception.NegocioException;
 import com.cleitonduarte.logistica.domain.model.Entrega;
 import com.cleitonduarte.logistica.domain.repository.EntregaRepository;
 

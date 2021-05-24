@@ -3,6 +3,8 @@ package com.cleitonduarte.logistica.api.model;
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
+import com.cleitonduarte.logistica.domain.model.StatusEntrega;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,6 +15,7 @@ public class EntregaModel {
 	private Long id;
 	private ClienteResumoModel Cliente;
 	private DestinatarioModel destinatario;
+	private StatusEntrega status;
 	private BigDecimal taxa;
 	private OffsetDateTime dataPedido;
 	private OffsetDateTime dataFinalizada;
